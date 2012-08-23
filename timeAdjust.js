@@ -26,6 +26,7 @@
 
 
     /**
+     * Instances of TimeAdjuster are capable of display correct time even when client clock set wrong. It just needs one correct timestamp.
      * @namespace
      * @param {Object} settings adjuster settings
      * @param {Number} [settings.serverTZ=0] server's timezone in minutes. Defaults to UTC (+00:00)
