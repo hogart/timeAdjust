@@ -1,10 +1,11 @@
 (function () {
+    /**
+     * @author <a href="mailto:doctor.hogart@gmail.com">Konstantin Kitmanov</a>
+     * May be freely distributed under the MIT license.
+     */
+
     'use strict';
 
-    // shiv for Date.now
-    var now = Date.now || function() {
-        return (new Date()).getTime()
-    };
 
     // helper for transforming various units to msecs
     var timeMultipliers = {
@@ -25,7 +26,7 @@
 
 
     /**
-     *
+     * @namespace
      * @param {Object} settings adjuster settings
      * @param {Number} [settings.serverTZ=0] server's timezone in minutes. Defaults to UTC (+00:00)
      * @param {Number} [settings.regionTZ=0] current region's timezone in minutes. Defaults to UTC.
@@ -49,28 +50,57 @@
             tolerance: 60000
         },
 
-
+        /**
+         * Get local timezone
+         * @return {Number}
+         */
         localTZ: function () {
             return new Date(TimeAdjuster.now()).getTimezoneOffset();
         },
 
+        /**
+         * Get local time
+         * @return {*}
+         */
         localNow: function () {
             return TimeAdjuster.now()
         },
 
+        /**
+         * What time in UTC is it now according to local time?
+         * @return {Number}
+         */
         localUTC: function () {
             return this.localNow() - TimeAdjuster.getTimeLap(this.localTZ(), 'min');
         },
 
-
-        serverTZ: function () {
-            return this.settings.serverTZ;
+        /**
+         * Gets or sets timezone of server
+         * @param {Number} [tz]
+         * @return {Number|undefined} minutes
+         */
+        serverTZ: function (tz) {
+            if (arguments.length) {
+                this.settings.serverTZ = tz
+            }
+            else {
+                return this.settings.serverTZ;
+            }
         },
 
+        /**
+         * What time is it now on server?
+         * @return {Number}
+         */
         serverNow: function () {
             return this.localNow() - this.adjustment;
         },
 
+        /**
+         * Returns current time on server or converts given time
+         * @param [dt=Date.now()]
+         * @return {Date}
+         */
         serverDate: function (dt) {
             var dtDraft;
             if (arguments.length) {
@@ -83,7 +113,11 @@
             return new Date(dtDraft);
         },
 
-
+        /**
+         * Gets or sets timezone of region
+         * @param tz
+         * @return {Number|undefined} minutes
+         */
         regionTZ: function (tz) {
             if (arguments.length) {
                 this.settings.regionTZ = tz
@@ -93,10 +127,19 @@
             }
         },
 
+        /**
+         * What time is it now in region?
+         * @return {Number}
+         */
         regionNow: function () {
             return this.serverNow() - TimeAdjuster.getTimeLap(this.regionTZ(), 'min')
         },
 
+        /**
+         * Returns current time in region or converts given time
+         * @param [dt=Date.now()]
+         * @return {Date}
+         */
         regionDate: function (dt) {
             var dtDraft;
             if (arguments.length) {
@@ -111,7 +154,7 @@
 
 
 //        starDate: function (dt) {
-//
+//            return 'Live long and prosper!';
 //        },
 
 
@@ -131,7 +174,13 @@
     };
 
     TimeAdjuster.getTimeLap = getTimeLap;
-    TimeAdjuster.now = now;
+
+    /**
+     * Shiv for Date.now
+     */
+    TimeAdjuster.now = Date.now || function() {
+        return (new Date()).getTime()
+    };
 
 
     // conflict management — save link to previous content of TimeAdjuster, whatever it was.
