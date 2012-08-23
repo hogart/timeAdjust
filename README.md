@@ -1,4 +1,4 @@
 timeAdjust
 ==========
 
-This lib is meant to resolve problems with wring time on client
+This lib is meant to resolve problems with wrong time on client
