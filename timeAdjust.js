@@ -200,7 +200,6 @@
     // Expose our precious function to outer world.
     if (typeof define === 'function' && define.amd) { // requirejs/amd env
         define(
-            'TimeAdjuster',
             [],
             function () {
                 return TimeAdjuster;
